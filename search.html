@@ -11,10 +11,26 @@
 <p id="test"></p>
 <script>
 	$('#test').html("test");
-	$.get("http://api.yi18.net/cook/search?keyword=南瓜", function(xhr){
+	$.get("search.json", function(xhr){
 		if(xhr)
 		{
-			document.write(xhr);
+			console.log(xhr);
+			if(xhr.success)
+			{
+				var item, tmp_str="";
+				for(var i=0;i<xhr.yi18.length;i++)
+				{
+					item = xhr.yi18[i];
+					tmp_str += item.name;
+					tmp_str += " | type: " + item.type;
+					tmp_str += "<br/>";
+					tmp_str += item.content;
+					tmp_str += "<br/>";
+					tmp_str += "<br/>";
+//					content: "材料  米 <font color="red">南瓜</font>  做法 1、米洗淨，容器裡（最少要2升的容器）放入開水；  2、微波爐900w高火10分鐘；  3、這時將<font color="red">南瓜</font>切丁；  4、時間到了之後，取出攪拌後，再用微波爐中火10分鐘；  5"description: ""id: 5792img: "img/cook/00005792.jpg"keywords: ""name: "DIY微波<font color="red">南瓜</font>粥"type: "cook"
+				}
+				document.write("<p>"+tmp_str+"</p>");
+			}
 		}
 	})
 </script>
