@@ -8,31 +8,67 @@
 	<script src="js/uikit.min.js"></script>
 </head>
 <body>
+<input type="text" id="keyword" onclick="search()"/> <input type="button" value="Send" onclick="search()"/>
+<select id="limit" onchange="search()">
+	<option value="10">10</option>
+	<option value="15">15</option>
+	<option value="20" selected>20</option>
+</select>
 <p id="test"></p>
 <script>
-	$('#test').html("test");
-	$.get("search.json", function(xhr){
-		if(xhr)
+	function search()
+	{
+		var keyword=document.getElementById('keyword').value;
+		var limit = document.getElementById('limit').value,
+			pages = (document.getElementById('pages'))?document.getElementById('pages').value:1;
+		if (keyword.length > 1)
 		{
-			console.log(xhr);
-			if(xhr.success)
+			console.info('limit ',limit, ' pages ', pages);
+			$.get("query.php", {key:keyword, lmt:limit, pg:pages}, function(xhr)
 			{
-				var item, tmp_str="";
-				for(var i=0;i<xhr.yi18.length;i++)
+				if(xhr)
 				{
-					item = xhr.yi18[i];
-					tmp_str += item.name;
-					tmp_str += " | type: " + item.type;
-					tmp_str += "<br/>";
-					tmp_str += item.content;
-					tmp_str += "<br/>";
-					tmp_str += "<br/>";
-//					content: "材料  米 <font color="red">南瓜</font>  做法 1、米洗淨，容器裡（最少要2升的容器）放入開水；  2、微波爐900w高火10分鐘；  3、這時將<font color="red">南瓜</font>切丁；  4、時間到了之後，取出攪拌後，再用微波爐中火10分鐘；  5"description: ""id: 5792img: "img/cook/00005792.jpg"keywords: ""name: "DIY微波<font color="red">南瓜</font>粥"type: "cook"
+					console.log(xhr);
+					if(xhr.success)
+					{
+						var i, item, tmp_str="", tmp_pages=Math.ceil(xhr.total/limit);
+						tmp_str += "search result : " + xhr.total + "<br/>";
+						
+						if(xhr.yi18.length)
+						{
+							tmp_str += "total pages : " + tmp_pages + "<br/>";
+							
+							if(tmp_pages > 1)
+							{
+								tmp_str+="<select id=\"pages\" onchange=\"search()\">";
+								for(i=1; i<=tmp_pages; i++)
+								{
+									tmp_str+="<option value=\""+i+"\">page "+i+"</option>";
+								}
+								tmp_str+="</select><br/><br/>"
+							}
+							for(i=0; i<xhr.yi18.length; i++)
+							{
+								item=xhr.yi18[i];
+								tmp_str+="<img src='http://www.yi18.net/"+item.img+"'/>";
+								tmp_str+=item.name;
+								tmp_str+=" | type: "+item.type+" | id : "+item.id;
+								tmp_str+="<br/>";
+								tmp_str+="keywords: "+item.keywords;
+								tmp_str+="<br/>";
+								tmp_str+="description: "+item.description;
+								tmp_str+="<br/>";
+								tmp_str+="content: "+item.content;
+								tmp_str+="<br/>";
+								tmp_str+="<br/>";
+							}
+							document.getElementById('test').innerHTML=tmp_str;
+						}
+					}
 				}
-				document.write("<p>"+tmp_str+"</p>");
-			}
+			}, "json")
 		}
-	})
+	}
 </script>
 </body>
 </html>
