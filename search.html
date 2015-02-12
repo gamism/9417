@@ -24,7 +24,7 @@
 		if (keyword.length > 1)
 		{
 			console.info('limit ',limit, ' pages ', pages);
-			$.get("query.php", {key:keyword, lmt:limit, pg:pages}, function(xhr)
+			$.get("query.php", {action:"search", key:keyword, lmt:limit, pg:pages}, function(xhr)
 			{
 				if(xhr)
 				{
@@ -50,7 +50,7 @@
 							for(i=0; i<xhr.yi18.length; i++)
 							{
 								item=xhr.yi18[i];
-								tmp_str+="<img src='http://www.yi18.net/"+item.img+"'/>";
+//								tmp_str+="<img src='http://www.yi18.net/"+item.img+"'/>";
 								tmp_str+=item.name;
 								tmp_str+=" | type: "+item.type+" | id : "+item.id;
 								tmp_str+="<br/>";
