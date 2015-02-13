@@ -17,7 +17,7 @@ switch ($action) {
           break;
 }
 
-function curl($url, $data)
+function curl($url, $data, $opt = 0)
 {
      $ch = curl_init($url);
      curl_setopt($ch, CURLOPT_POST, 1);
@@ -30,8 +30,13 @@ function curl($url, $data)
 
      curl_close($ch);
 
-     header("Content-Type:text/html; charset=utf-8");
-     echo $result;
+     if($opt) {
+          return $result;
+     }
+     else {
+          header("Content-Type:text/html; charset=utf-8");
+          echo $result;
+     }
 }
 
 function detail()
