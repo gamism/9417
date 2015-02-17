@@ -14,14 +14,23 @@
 	<option value="15">15</option>
 	<option value="20" selected>20</option>
 </select>
-<p id="test"></p>
+
+<div class="uk-grid">
+    <div class="uk-width-8-10 uk-align-center">
+        <div id="test" class="uk-width-1-1 uk-text-right"></div>
+    </div>
+    <div class="uk-width-8-10 uk-align-center">
+        <ul id="test2" class="uk-list uk-list-striped"></ul>
+    </div>
+</div>
+
 <script>
 	function search()
 	{
 		var keyword=document.getElementById('keyword').value;
 		var limit = document.getElementById('limit').value,
 			pages = (document.getElementById('pages'))?document.getElementById('pages').value:1;
-		if (keyword.length > 1)
+		if (keyword.length)
 		{
 			console.info('limit ',limit, ' pages ', pages);
 			$.get("query.php", {action:"search", key:keyword, lmt:limit, pg:pages}, function(xhr)
@@ -31,7 +40,7 @@
 					console.log(xhr);
 					if(xhr.success)
 					{
-						var i, item, tmp_str="", tmp_pages=Math.ceil(xhr.total/limit);
+						var i, item, tmp_str="", tmp_str2="", tmp_pages=Math.ceil(xhr.total/limit);
 						tmp_str += "search result : " + xhr.total + "<br/>";
 						
 						if(xhr.yi18.length)
@@ -51,18 +60,19 @@
 							{
 								item=xhr.yi18[i];
 //								tmp_str+="<img src='http://www.yi18.net/"+item.img+"'/>";
-								tmp_str+=item.name;
-								tmp_str+=" | type: "+item.type+" | id : "+item.id;
-								tmp_str+="<br/>";
-								tmp_str+="keywords: "+item.keywords;
-								tmp_str+="<br/>";
-								tmp_str+="description: "+item.description;
-								tmp_str+="<br/>";
-								tmp_str+="content: "+item.content;
-								tmp_str+="<br/>";
-								tmp_str+="<br/>";
+                                tmp_str2+="<li>";
+								tmp_str2+=item.name;
+								tmp_str2+=" | type: "+item.type+" | id : <a href='detail.php?id="+item.id+"' target=_blank >"+item.id+"</a>";
+//								tmp_str+="<br/>";
+//								tmp_str+="keywords: "+item.keywords;
+//								tmp_str+="<br/>";
+//								tmp_str+="description: "+item.description;
+//								tmp_str+="<br/>";
+//								tmp_str+="content: "+item.content;
+                                tmp_str2+="</li>";
 							}
 							document.getElementById('test').innerHTML=tmp_str;
+                            document.getElementById('test2').innerHTML=tmp_str2;
 						}
 					}
 				}
